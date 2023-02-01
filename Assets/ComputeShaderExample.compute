@@ -1,0 +1,53 @@
+// Each #kernel tells which function to compile; you can have many kernels
+#pragma kernel CSMain
+
+
+
+
+
+// Create a RenderTexture with enableRandomWrite flag and set it
+// with cs.SetTexture
+RWTexture2D<float4> Result;
+RWTexture2D<float4> VectorSpace;
+RWStructuredBuffer<float4> instructBuf;
+uint bufflenght;
+bool first;
+[numthreads(100,1,1)]
+void CSMain (uint3 id : SV_DispatchThreadID)
+{
+    instructBuf[0];
+
+
+    
+    // TODO: insert actual code here!
+    if (first)
+    {
+        Result[id.xy] = float4(id.x & id.y, (id.x & 15)/15.0, (id.y & 15)/15.0, 0.0);
+    }
+    else
+    {
+        Result[id.xy]=Result[id.xy]+(0.05f).xxxx;
+    }
+}
+
+float segment( float2 p, float2 a, float2 b ) {
+    float2 pa = p - a;
+    float2 ba = b - a;
+    float h = clamp( dot(pa,ba)/dot(ba,ba), 0., 1. );
+    return length( pa - ba*h );
+}
+
+[numthreads(1024,1024,1)]
+void GenForceField(uint3 id:SV_DispatchThreadID)
+{
+
+    float2 vect;
+    for (int i = 0; i < bufflenght; ++i)
+    {
+        auto a=instructBuf[i].rg;
+        auto b=instructBuf[i].ba;
+vect+=segment((id.xy/1024),a,b)*normalize(b-a);
+    }
+    VectorSpace[id.xy].xy=vect;
+}
+
