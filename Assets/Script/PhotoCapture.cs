@@ -29,10 +29,8 @@ public class PhotoCapture : MonoBehaviour
         screenCapture = new Texture2D(Screen.width, Screen.height, TextureFormat.RGB24, false);
     }
 
-    public void Update()
+    public void takePhoto()
     {
-        if(Input.GetMouseButtonDown(0))
-        {
             if(!viewingPhoto)
             {
                 StartCoroutine(CapturePhoto());
@@ -43,8 +41,6 @@ public class PhotoCapture : MonoBehaviour
                 viewingPhoto = false;
                 photoFrame.SetActive(false);
             }
-
-        }
     }
 
     IEnumerator CapturePhoto()
