@@ -6,7 +6,8 @@ public class otherLine : MonoBehaviour
 {
     private LineRenderer lineRenderer;
     private Vector2 mousePos;
-    Vector3[] positions;
+    private Vector2 currentMousePos;
+    List<Vector3> positions = new();
     private int clickCounter;
   
 
@@ -16,23 +17,24 @@ public class otherLine : MonoBehaviour
     {
         lineRenderer = GetComponent<LineRenderer>();
         clickCounter = 0;
+        lineRenderer.positionCount = 1;
     }
 
     private void Update()
     {
         if (Input.GetMouseButtonDown(0))
         {
+            lineRenderer.positionCount++;
             mousePos = Camera.main.ScreenToWorldPoint(Input.mousePosition);
-            positions = new Vector3[clickCounter + 1];
-            positions[clickCounter] = new Vector3(mousePos.x, mousePos.y, 0f);
-            lineRenderer.SetPosition(clickCounter, positions[clickCounter]);
+            positions.Add(new Vector3(mousePos.x, mousePos.y, 0f));
+            lineRenderer.SetPosition(clickCounter + 1, new Vector3(mousePos.x, mousePos.y, 0f));
             clickCounter++;
-            lineRenderer.positionCount = clickCounter + 2;
         }
-
-        /*for (int i = 0; i < clickCounter; i++)
+        if (Input.GetMouseButton(0))
         {
-            lineRenderer.SetPosition(i, positions[i]);
-        }*/
+            currentMousePos = Camera.main.ScreenToWorldPoint(Input.mousePosition);
+            lineRenderer.SetPosition(clickCounter, new Vector3(currentMousePos.x, currentMousePos.y, 0f));
+
+        }
     }
 }
