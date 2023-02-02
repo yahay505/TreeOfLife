@@ -42,3 +42,6 @@ TagManager:
   - name: Default
     uniqueID: 0
     locked: 0
+  - name: Dark
+    uniqueID: 3698368057
+    locked: 0
