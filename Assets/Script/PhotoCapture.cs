@@ -11,30 +11,32 @@ public class PhotoCapture : MonoBehaviour
     [SerializeField] private float waitTime;
 
 
-    [Header("Photo Taker")]
-    [SerializeField] private GameObject cameraFlash;
-    [SerializeField] private float  flashTime;
-
-
     [Header("Photo Fader Effect")]
     [SerializeField] private Animator fadingAnimation;
 
     private Texture2D screenCapture;
     private bool viewingPhoto;
-    private int amount = 0;
+    public GameObject photoBackground;
+    Animator anim;
+
+    string folderPath = "Screenshots/";
 
 
-    private void Start()
+    void Start()
     {
         screenCapture = new Texture2D(Screen.width, Screen.height, TextureFormat.RGB24, false);
+        if (!System.IO.Directory.Exists(folderPath))
+        {
+            System.IO.Directory.CreateDirectory(folderPath);
+        }
+        anim = photoBackground.GetComponent<Animator>();
     }
 
     public void takePhoto()
     {
             if(!viewingPhoto)
             {
-                StartCoroutine(CapturePhoto());
-                StartCoroutine(RemovePhoto());
+                StartCoroutine(CapturePhoto());                
             }
             else
             {
@@ -43,10 +45,16 @@ public class PhotoCapture : MonoBehaviour
             }
     }
 
+    public void Remove()
+    {
+        StartCoroutine(RemovePhoto());
+    }
+
     IEnumerator CapturePhoto()
     {
-        amount++;
-        ScreenCapture.CaptureScreenshot("Screenshots" + amount + ".png");
+        var screenshotName = "Screenshot_" + System.DateTime.Now.ToString("dd-MM-yyyy-HH-mm-ss") + ".png";
+        ScreenCapture.CaptureScreenshot(System.IO.Path.Combine(folderPath, screenshotName));
+        Debug.Log(folderPath + screenshotName);
         viewingPhoto = true;
         yield return new WaitForEndOfFrame();
         Rect regionToRead = new Rect(0, 0, Screen.width, Screen.height);
@@ -57,24 +65,20 @@ public class PhotoCapture : MonoBehaviour
 
     void ShowPhoto()
     {
-        StartCoroutine(CameraFlashEffect());
         Sprite photoSprite = Sprite.Create(screenCapture, new Rect(0.0f, 0.0f, screenCapture.width, screenCapture.height), new Vector2(0.5f, 0.5f), 100.0f);
         photoDisplayArea.sprite = photoSprite;
         photoFrame.SetActive(true);
+        anim.Play("photoEnter");
         fadingAnimation.Play("PhotoFade");
     }
 
     IEnumerator RemovePhoto()
     {
-        yield return new WaitForSeconds(waitTime);
+        anim.Play("exit");
+        float f = 0.9f;
+        yield return new WaitForSeconds(f);
         viewingPhoto = false;
         photoFrame.SetActive(false);
-    }
-    IEnumerator CameraFlashEffect()
-    {
-        cameraFlash.SetActive(true);
-        yield return new WaitForSeconds(flashTime);
-        cameraFlash.SetActive(false);
     }
 
 }
