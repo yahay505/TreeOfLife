@@ -121,7 +121,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   fallingSpeed: 1
   fadingSpeed: 0.05
-  waitBeforeFade: 10
+  waitBeforeFade: 2
 --- !u!50 &1974458416934146942
 Rigidbody2D:
   serializedVersion: 4

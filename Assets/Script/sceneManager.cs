@@ -9,6 +9,8 @@ public class sceneManager : MonoBehaviour
     public GameObject credits;
     public int target = 30;
     public string nextSceneName;
+    public GameObject dunya1;
+    public GameObject dunya2;
 
     void Start()
     {
@@ -16,6 +18,8 @@ public class sceneManager : MonoBehaviour
 
         mainCanvas.SetActive(true);
         credits.SetActive(false);
+        dunya1.SetActive(true);
+        dunya2.SetActive(false);
     }
 
     void Update()
@@ -40,12 +44,16 @@ public class sceneManager : MonoBehaviour
     {
         credits.SetActive(true);
         mainCanvas.SetActive(false);
+        dunya1.SetActive(false);
+        dunya2.SetActive(true);
     }
 
     public void back()
     {
         credits.SetActive(false);
         mainCanvas.SetActive(true);
+        dunya1.SetActive(true);
+        dunya2.SetActive(false);
     }
 
 
